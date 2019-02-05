@@ -4,13 +4,16 @@ export class MakeFunction {
 
     commands: string[] = [];
 
-    constructor(rootElement: string) {
-        this.createElement(rootElement);
-        this.addElement('p', {}, 'var0');
+    constructor() {
+
     }
 
-    public addElement(elementType: string, attrs: { [key: string]: string }, parentVar: string) {
-        this.createElement(elementType, parentVar);
+    public addElement(elementType: string, attrs: { [key: string]: string }, parentVar: string): string {
+        var element = this.createElement(elementType, parentVar);
+        Object.keys(attrs).forEach(key => {
+            this.setAttr(element, key, attrs[key]);
+        });
+        return element;
     }
 
     public createElement(tagName: string, parentVar: string = null) {
@@ -20,6 +23,10 @@ export class MakeFunction {
             this.commands.push(`${parentVar}.appendChild(${varName})`);
         }
         return varName;
+    }
+
+    setAttr(element: string, key: string, value: string) {
+        this.commands.push(`${element}.setAttribute(${key}, ${value})`);
     }
 
     getFunction(): Function {
